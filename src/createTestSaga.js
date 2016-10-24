@@ -172,6 +172,17 @@ export default function createTestSaga(rs: Object): Function {
 
         return api;
       },
+
+      yields: (value) => (fn) => {
+        if (typeof fn !== 'function') {
+          throw new SagaTestError('must pass a function to yields');
+        }
+
+        fn(value);
+
+        return api;
+      },
+
     };
 
     function createIterator(): Generator<*, *, *> {
@@ -204,6 +215,7 @@ export default function createTestSaga(rs: Object): Function {
         is: effectsTestersCreators.is(value),
         isDone: effectsTestersCreators.isDone(done),
         returns: effectsTestersCreators.returns(value, done),
+        yields: effectsTestersCreators.yields(value),
       });
     }
 
